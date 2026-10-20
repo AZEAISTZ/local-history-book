@@ -51,11 +51,11 @@
   ponytail (เขียนโค้ดเท่าที่จำเป็น), diagram-design (ไม่บังคับ)
 - ไม่ใช้: taste-skill, ui-ux-pro-max, last30days, deep-research, web search หาเนื้อหา,
   humanizer กับเนื้อหาสรุป
-- **playwright-cli ใช้ไม่ได้** เพราะเครื่องนี้ไม่มี Node.js
-  ใช้ ScraplingServer browser session + Browser pane (mcp__Claude_Browser__*) แทน
-  สำหรับรัน JS, ถ่ายภาพหน้าจอ และตรวจหน้าเว็บ
+- **แก้แล้ว (2026-10-20): มี Node.js แล้ว (v24.20.0) และ playwright-cli ใช้งานได้ (0.1.22)**
+  ยังคงใช้ ScraplingServer browser session + Browser pane (mcp__Claude_Browser__*) เป็นหลัก
+  ตามที่เคยตั้งไว้ เว้นแต่จำเป็นต้องใช้ playwright-cli จริง ๆ จึงใช้ได้แล้ว
 
-## คำสั่งที่ใช้บ่อย (เครื่องนี้ไม่มี Node.js, python อยู่ที่ path เต็ม)
+## คำสั่งที่ใช้บ่อย (python อยู่ที่ path เต็ม)
 ```
 PY=/c/Users/ADMIN/AppData/Local/Programs/Python/Python315/python.exe
 "$PY" source/_dl.py 11-30     # ดาวน์โหลดภาพหน้าหนังสือเป็น PNG ลง source/img/
@@ -85,6 +85,8 @@ source/               (gitignored) ภาพหน้าหนังสือ + 
 2. **ทุกรอบอ่านเฉพาะไฟล์ที่จำเป็น**: CLAUDE.md, PROGRESS.md, content/toc.json
    และ source ของบทที่กำลังทำเท่านั้น ห้ามอ่านบทอื่น
    ห้ามเปิด AnyFlip ซ้ำสำหรับบทที่ดึงข้อความแล้ว
+   ถ้าต้องดูตัวอย่างบทสรุปที่เขียนแล้วเพื่อใช้เป็นแม่แบบ ให้ดูเฉพาะ `content/chapters/01.md`
+   เท่านั้น ห้ามเปิดไฟล์บทอื่นเพื่อดูตัวอย่าง
 
 3. **เฟส 2**: ถ้าดึงเป็นข้อความได้ (text layer) ให้เขียนสคริปต์ Python
    ดึงแล้วบันทึกลง source/ โดยตรง ไม่ต้องแสดงเนื้อหาในแชท
@@ -99,3 +101,5 @@ source/               (gitignored) ภาพหน้าหนังสือ + 
 
 6. **เฟส 6 ถ่ายภาพหน้าจอเท่าที่จำเป็น**: index และบทตัวอย่าง 1 บท
    ที่ความกว้าง 390 และ 1440 px เท่านั้น
+
+7. **เฟส 5–6 ต้องอ่าน BUILD-SPEC.md และ DESIGN.md ก่อนเริ่มทุกรอบ**
