@@ -225,22 +225,82 @@ function initProgressBar() {
 }
 
 function initSubtocSpy(article) {
-  const asideLinks = [...document.querySelectorAll("[data-aside-subtoc] a")];
   const headings = [...article.querySelectorAll("h2[id]")];
-  if (!asideLinks.length || !headings.length) return;
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const link = asideLinks.find((a) => a.getAttribute("href") === `#${entry.target.id}`);
-        if (!link) return;
-        asideLinks.forEach((a) => a.removeAttribute("aria-current"));
-        link.setAttribute("aria-current", "true");
-      });
+  const subtocLinks = [...document.querySelectorAll(".chapter-subtoc a")];
+  if (!headings.length || !subtocLinks.length) return;
+
+  // header + reading-progress bar are both sticky at top:0 / top:var(--header-h),
+  // so measuring the bar's real rect beats trusting --header-h to match actual rendered height
+  const headerOffset = () => {
+    const bar = document.querySelector(".reading-progress");
+    return (bar ? bar.getBoundingClientRect().bottom : 0) + 24;
+  };
+
+  const syncLayout = () => {
+    const offset = headerOffset();
+    headings.forEach((h) => (h.style.scrollMarginTop = `${offset}px`));
+    // every heading, including the last, must be able to scroll up to just below the header —
+    // needs as much trailing space as the shortest "heading to end of article" gap
+    article.style.paddingBottom = `${Math.max(0, window.innerHeight - offset)}px`;
+  };
+
+  const setActive = (id) => {
+    subtocLinks.forEach((a) => {
+      if (a.getAttribute("href") === `#${id}`) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    });
+  };
+
+  const pickActive = () => {
+    // +4px tolerance: a settled smooth-scroll can land a hair past the exact
+    // scroll-margin target (subpixel rounding), which would otherwise demote
+    // the just-landed heading back to its predecessor
+    const limit = headerOffset() + 4;
+    let active = headings[0];
+    for (const h of headings) {
+      if (h.getBoundingClientRect().top <= limit) active = h;
+      else break;
+    }
+    return active;
+  };
+
+  let suppressed = false;
+  let resumeTimer = null;
+
+  syncLayout();
+  setActive(pickActive().id);
+
+  window.addEventListener("resize", () => {
+    syncLayout();
+    if (!suppressed) setActive(pickActive().id);
+  });
+
+  document.addEventListener(
+    "scroll",
+    () => {
+      if (suppressed) return;
+      setActive(pickActive().id);
     },
-    { rootMargin: "-10% 0px -70% 0px" }
+    { passive: true }
   );
-  headings.forEach((h) => observer.observe(h));
+
+  subtocLinks.forEach((a) => {
+    a.addEventListener("click", (e) => {
+      const id = a.getAttribute("href").slice(1);
+      const heading = document.getElementById(id);
+      if (!heading) return;
+      e.preventDefault();
+      setActive(id);
+      suppressed = true;
+      clearTimeout(resumeTimer);
+      heading.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      history.replaceState(null, "", `#${id}`);
+      resumeTimer = setTimeout(() => {
+        suppressed = false;
+        setActive(pickActive().id);
+      }, reduceMotion ? 50 : 700);
+    });
+  });
 }
 
 function renderChapterInfo(toc, chapter) {

@@ -43,7 +43,7 @@
 
 * { box-sizing: border-box; }
 
-html { color-scheme: light; }
+html { color-scheme: light; scroll-behavior: smooth; }
 
 body {
   margin: 0;
@@ -390,10 +390,11 @@ main { min-width: 0; padding: 0 var(--space-md) var(--space-4xl); }
 
 .back-to-toc { display: inline-block; margin: var(--space-lg) 0; }
 
-.chapter-article { max-width: var(--measure); padding-bottom: 60vh; }
+.chapter-article { max-width: var(--measure); }
 .chapter-article p, .chapter-article li { font-size: var(--text-body); }
 .chapter-article strong { color: var(--color-accent); }
-.chapter-article h2[id] { scroll-margin-top: calc(var(--header-h) + 3px + 24px); }
+/* padding-bottom + scroll-margin-top are set in JS (initSubtocSpy) from the real
+   header/progress-bar height, since --header-h is a nominal fallback, not a measurement */
 
 .chapter-subtoc {
   border: 1px solid var(--color-rule);
@@ -536,6 +537,7 @@ main { min-width: 0; padding: 0 var(--space-md) var(--space-4xl); }
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
   }
+  html { scroll-behavior: auto; }
 }
 
 @media print {
