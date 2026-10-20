@@ -38,6 +38,7 @@
 
   --side-rail-width: 280px;
   --measure: 72ch;
+  --header-h: 72px; /* .site-title wraps 2 lines via <br> at all widths — real height, not 57px */
 }
 
 * { box-sizing: border-box; }
@@ -147,9 +148,9 @@ img, svg { max-width: 100%; }
 
 .side-rail {
   position: sticky;
-  top: 57px;
+  top: var(--header-h);
   align-self: start;
-  max-height: calc(100vh - 57px);
+  max-height: calc(100vh - var(--header-h));
   overflow-y: auto;
   background: var(--color-rail-bg);
   border-right: 1px solid var(--color-rule);
@@ -375,7 +376,7 @@ main { min-width: 0; padding: 0 var(--space-md) var(--space-4xl); }
 
 .reading-progress {
   position: sticky;
-  top: 57px;
+  top: var(--header-h);
   height: 3px;
   background: var(--color-paper-2);
   z-index: 19;
@@ -389,9 +390,10 @@ main { min-width: 0; padding: 0 var(--space-md) var(--space-4xl); }
 
 .back-to-toc { display: inline-block; margin: var(--space-lg) 0; }
 
-.chapter-article { max-width: var(--measure); }
+.chapter-article { max-width: var(--measure); padding-bottom: 60vh; }
 .chapter-article p, .chapter-article li { font-size: var(--text-body); }
 .chapter-article strong { color: var(--color-accent); }
+.chapter-article h2[id] { scroll-margin-top: calc(var(--header-h) + 3px + 24px); }
 
 .chapter-subtoc {
   border: 1px solid var(--color-rule);
@@ -487,10 +489,10 @@ main { min-width: 0; padding: 0 var(--space-md) var(--space-4xl); }
   .nav-toggle { display: inline-flex; align-items: center; justify-content: center; }
   .side-rail {
     position: fixed;
-    inset: 57px 0 0 auto;
+    inset: var(--header-h) 0 0 auto;
     width: min(320px, 85vw);
     max-height: none;
-    height: calc(100vh - 57px);
+    height: calc(100vh - var(--header-h));
     background: var(--color-rail-bg);
     transform: translateX(100%);
     transition: transform var(--dur-base) var(--ease-out);
@@ -508,7 +510,7 @@ main { min-width: 0; padding: 0 var(--space-md) var(--space-4xl); }
     max-width: none;
     margin: 0;
   }
-  .side-rail { grid-column: 1; width: 300px; height: calc(100vh - 57px); }
+  .side-rail { grid-column: 1; width: 300px; height: calc(100vh - var(--header-h)); }
   main { grid-column: 3; }
 
   body[data-page="chapter"] .layout {
@@ -518,9 +520,9 @@ main { min-width: 0; padding: 0 var(--space-md) var(--space-4xl); }
     display: block;
     grid-column: 4;
     position: sticky;
-    top: 57px;
+    top: var(--header-h);
     align-self: start;
-    max-height: calc(100vh - 57px);
+    max-height: calc(100vh - var(--header-h));
     overflow-y: auto;
     padding: var(--space-lg) var(--space-md) var(--space-lg) 0;
   }
