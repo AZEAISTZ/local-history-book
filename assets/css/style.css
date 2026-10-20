@@ -393,8 +393,8 @@ main { min-width: 0; padding: 0 var(--space-md) var(--space-4xl); }
 .chapter-article { max-width: var(--measure); }
 .chapter-article p, .chapter-article li { font-size: var(--text-body); }
 .chapter-article strong { color: var(--color-accent); }
-/* padding-bottom + scroll-margin-top are set in JS (initSubtocSpy) from the real
-   header/progress-bar height, since --header-h is a nominal fallback, not a measurement */
+/* scroll-margin-top is set in JS (initSubtocSpy) from the real header/progress-bar
+   height, since --header-h is a nominal fallback, not a measurement */
 
 .chapter-subtoc {
   border: 1px solid var(--color-rule);

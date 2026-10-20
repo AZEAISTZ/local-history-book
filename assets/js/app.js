@@ -239,9 +239,6 @@ function initSubtocSpy(article) {
   const syncLayout = () => {
     const offset = headerOffset();
     headings.forEach((h) => (h.style.scrollMarginTop = `${offset}px`));
-    // every heading, including the last, must be able to scroll up to just below the header —
-    // needs as much trailing space as the shortest "heading to end of article" gap
-    article.style.paddingBottom = `${Math.max(0, window.innerHeight - offset)}px`;
   };
 
   const setActive = (id) => {
@@ -252,6 +249,12 @@ function initSubtocSpy(article) {
   };
 
   const pickActive = () => {
+    // at max scroll, trailing content may be too short to push the last heading
+    // up to the header line — treat it as active anyway since it's as close as it gets
+    const doc = document.documentElement;
+    if (window.scrollY + window.innerHeight >= doc.scrollHeight - 1) {
+      return headings[headings.length - 1];
+    }
     // +4px tolerance: a settled smooth-scroll can land a hair past the exact
     // scroll-margin target (subpixel rounding), which would otherwise demote
     // the just-landed heading back to its predecessor
